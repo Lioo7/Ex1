@@ -2,26 +2,37 @@ import java.util.Collection;
 import java.util.HashMap;
 
 public class WGraph_DS implements weighted_graph {
-    /**
-     * The NodeData class represents the set of operations applicable on a
-     * node (vertex) in an (unidirectional) unweighted graph.
-     * Using a HashMap to store the id and the neighbors of each vertex.
-     * Each vertex contains three variables:
-     * - A key of type int which represents the exclusive key of the vertex, initializes automatically.
-     * - An info of type String which represents the parent of the vertex, initializes as null by default.
-     * - A tag of type int which represents the distance of the vertex form his source, initializes as -1 by default.
-     * Each of these three variables has getters and setters methods.
-     *
-     * @author Lioz Akirav.
-     * @version 1.0, 12 Nov 2020.
-     */
-    public class NodeData<node_data> implements node_info{
+
+    private int mc; //Mode Count - for testing changes in the graph.
+    private int countEdges ; //The total number of edges in the graph,
+    private HashMap<Integer, NodeData> vertices;
+
+    public WGraph_DS() {
+        this.mc = 0;
+        this.countEdges  = 0;
+        this.vertices = new HashMap<>();
+    }
+
+    public static class NodeData implements node_info{
+        /**
+         * The NodeData class represents the set of operations applicable on a
+         * node (vertex) in an (unidirectional) unweighted graph.
+         * Using a HashMap to store the id and the neighbors of each vertex.
+         * Each vertex contains three variables:
+         * - A key of type int which represents the exclusive key of the vertex, initializes automatically.
+         * - An info of type String which represents the parent of the vertex, initializes as null by default.
+         * - A tag of type int which represents the distance of the vertex form his source, initializes as -1 by default.
+         * Each of these three variables has getters and setters methods.
+         *
+         * @author Lioz Akirav.
+         * @version 1.0, 12 Nov 2020.
+         */
 
         private int key; //id
         private String info; //parent
         private double tag; //distance
         //Creates a collection using hash map
-        private HashMap<Integer, node_data> nei;
+        private HashMap<Integer, node_info> nei;
 
         public NodeData(int key) {
             this.key = key;
@@ -35,7 +46,7 @@ public class WGraph_DS implements weighted_graph {
          *
          * @return the hash map.
          */
-        private HashMap<Integer, node_data> getMap() {
+        private HashMap<Integer, node_info> getMap() {
             return this.nei;
         }
 
@@ -63,7 +74,7 @@ public class WGraph_DS implements weighted_graph {
          *
          * @return the neighbors of this node.
          */
-        public Collection<node_data> getNi() {
+        public Collection<node_info> getNi() {
             return this.nei.values();
         }
 
@@ -74,7 +85,7 @@ public class WGraph_DS implements weighted_graph {
          * @return true iff this<==>key are adjacent.
          */
         public boolean hasNi(int key) {
-            for (node_data ni : this.nei.values()) {
+            for (node_info ni : this.nei.values()) {
                 if (ni.getKey() == key) return true;
             }
             return false;
@@ -85,7 +96,7 @@ public class WGraph_DS implements weighted_graph {
          *
          * @param t the node_data that will adds to this node_data.
          */
-        public void addNi(node_data t) {
+        public void addNi(node_info t) {
             //Adds t to this nei
             this.nei.put(t.getKey(), t);
             NodeData temp = (NodeData) t;
@@ -98,7 +109,7 @@ public class WGraph_DS implements weighted_graph {
          *
          * @param node the node the will be deleted.
          */
-        public void removeNode(node_data node) {
+        public void removeNode(node_info node) {
             this.nei.remove(node.getKey(), node);
         }
 
@@ -152,23 +163,85 @@ public class WGraph_DS implements weighted_graph {
         }
     }
 
-    public class Edge {
-       // bla bla
+    public static class Edge {
+        private int key; //id
+        private double len; //length
+        //Creates a collection using hash map
+        private HashMap<Integer, Double> edges;
+
+        public Edge(int ver1, int ver2, double len) {
+            String str = String.valueOf(ver1) + String.valueOf(ver2);
+            this.key = Integer.parseInt(str);
+            this.len = len;
+            this.edges = new HashMap<>();
+        }
+
+        /**
+         * key getter method.
+         *
+         * @return the key (id) associated with this edge.
+         */
+        public int getKey() {
+            return key;
+        }
+
+        public int getKey(int ver1, int ver2) {
+            int key = Integer.parseInt(String.valueOf(ver2) + String.valueOf(ver1));
+            if(edges.containsKey(key)){
+                return key;
+            }
+
+            int key2 = Integer.parseInt(String.valueOf(ver2) + String.valueOf(ver1));
+            if(edges.containsKey(key)){
+                return key2;
+            }
+             // need to add throw exception
+            return 0;
+        }
+
+        /**
+         * length getter method.
+         *
+         * @return the length associated with this edge.
+         */
+        public double getLen() {
+            return len;
+        }
     }
 
     @Override
-    public node_info getNode(int key) {
-        return null;
+    public NodeData getNode(int key) {
+        if (!vertices.containsKey(key)) {
+            return null;
+        }
+        return vertices.get(key);
     }
 
     @Override
     public boolean hasEdge(int node1, int node2) {
-        return false;
+        /*
+        The method checks if both of the edges exist in the graph,
+        then it checks if node1 is a neighbor of node2 and vice versa.
+         */
+        boolean flag = false;
+        NodeData a = getNode(node1);
+        NodeData b = getNode(node2);
+        if (a == null || b == null) {
+            return false;
+        }
+        if (a.hasNi(b.getKey()) && b.hasNi(a.getKey())) {
+            flag = true;
+        }
+        return flag;
     }
 
     @Override
     public double getEdge(int node1, int node2) {
-        return 0;
+        if(hasEdge(node1, node2)){
+            grt
+            return temp.getLen();
+        }
+        return 0; //throw exception
     }
 
     @Override
@@ -214,5 +287,18 @@ public class WGraph_DS implements weighted_graph {
     @Override
     public int getMC() {
         return 0;
+    }
+
+    public static void main(String args[]){
+        NodeData n0 = new NodeData(0);
+        NodeData n1 = new NodeData(1);
+        n0.addNi(n1);
+
+        System.out.println("n0: "+ n0.getKey());
+        System.out.println("n0 nei: "+ n0.getNi());
+
+        Edge e0 = new Edge(1, 0, 5.5);
+        System.out.println("e0: "+ e0.getKey());
+        System.out.println("e0 len: "+ e0.getLen());
     }
 }
