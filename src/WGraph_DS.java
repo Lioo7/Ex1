@@ -3,14 +3,18 @@ import java.util.HashMap;
 
 public class WGraph_DS implements weighted_graph {
 
+    private int key; //id
+    private double weight;
     private int mc; //Mode Count - for testing changes in the graph.
     private int countEdges ; //The total number of edges in the graph,
-    private HashMap<Integer, NodeData> vertices;
+    public HashMap<Integer, NodeData> vertices;
+    private HashMap<NodeData, NodeData> verNei = new HashMap<>();
+    private HashMap<NodeData, Double> edges = new HashMap<>();
 
     public WGraph_DS() {
         this.mc = 0;
         this.countEdges  = 0;
-        this.vertices = new HashMap<>();
+        this.vertices = new HashMap<Integer, NodeData>();
     }
 
     public static class NodeData implements node_info{
@@ -163,52 +167,6 @@ public class WGraph_DS implements weighted_graph {
         }
     }
 
-    public static class Edge {
-        private int key; //id
-        private double len; //length
-        //Creates a collection using hash map
-        private HashMap<Integer, Double> edges;
-
-        public Edge(int ver1, int ver2, double len) {
-            String str = String.valueOf(ver1) + String.valueOf(ver2);
-            this.key = Integer.parseInt(str);
-            this.len = len;
-            this.edges = new HashMap<>();
-        }
-
-        /**
-         * key getter method.
-         *
-         * @return the key (id) associated with this edge.
-         */
-        public int getKey() {
-            return key;
-        }
-
-        public int getKey(int ver1, int ver2) {
-            int key = Integer.parseInt(String.valueOf(ver2) + String.valueOf(ver1));
-            if(edges.containsKey(key)){
-                return key;
-            }
-
-            int key2 = Integer.parseInt(String.valueOf(ver2) + String.valueOf(ver1));
-            if(edges.containsKey(key)){
-                return key2;
-            }
-             // need to add throw exception
-            return 0;
-        }
-
-        /**
-         * length getter method.
-         *
-         * @return the length associated with this edge.
-         */
-        public double getLen() {
-            return len;
-        }
-    }
-
     @Override
     public NodeData getNode(int key) {
         if (!vertices.containsKey(key)) {
@@ -237,26 +195,52 @@ public class WGraph_DS implements weighted_graph {
 
     @Override
     public double getEdge(int node1, int node2) {
-        if(hasEdge(node1, node2)){
-            grt
-            return temp.getLen();
+        NodeData n1 = getNode(node1);
+        NodeData n2 = getNode(node2);
+
+        if(n1.hasNi(node2)){
+            if(edges.get(n1) != null){
+                return edges.get(n1);
+            }
+            else {
+                return edges.get(n2);
+            }
         }
-        return 0; //throw exception
+
+        return -1;
     }
 
     @Override
     public void addNode(int key) {
-
+        if(!vertices.containsKey(key)){
+            NodeData temp = new NodeData(key);
+            vertices.put(key, temp);
+            mc++;
+        }
     }
 
     @Override
     public void connect(int node1, int node2, double w) {
-
+        if (node1 != node2) {
+            NodeData a = getNode(node1);
+            NodeData b = getNode(node2);
+            if(!hasEdge(node1, node2)) {
+                a.addNi(b);
+                b.addNi(a);
+                verNei.put(a, b);
+                edges.put(b, w);
+                mc++;
+                countEdges += 1;
+            }
+            else{
+                edges.replace(b, w); //MC OR NOT???
+            }
+        }
     }
 
     @Override
     public Collection<node_info> getV() {
-        return null;
+        return vertices.values();
     }
 
     @Override
@@ -292,13 +276,20 @@ public class WGraph_DS implements weighted_graph {
     public static void main(String args[]){
         NodeData n0 = new NodeData(0);
         NodeData n1 = new NodeData(1);
-        n0.addNi(n1);
+        NodeData n2 = new NodeData(2);
+        WGraph_DS g1 = new WGraph_DS();
+        g1.addNode(0);
+        g1.addNode(1);
+        g1.addNode(2);
+        g1.connect(0, 1, 10);
 
+        System.out.println("n0: "+ g1.getNode(0));
         System.out.println("n0: "+ n0.getKey());
-        System.out.println("n0 nei: "+ n0.getNi());
+        System.out.println("n0 and n1 has edge: "+ g1.hasEdge(0, 1));
+        System.out.println("n0 and n1 has edge: "+ g1.hasEdge(0, 1));
+        System.out.println("n0 and n1 get edge: "+ g1.getEdge(0, 1));
+        g1.connect(0, 1, 15.5);
+        System.out.println("n0 and n1 get edge(2): "+ g1.getEdge(0, 1));
 
-        Edge e0 = new Edge(1, 0, 5.5);
-        System.out.println("e0: "+ e0.getKey());
-        System.out.println("e0 len: "+ e0.getLen());
     }
 }
