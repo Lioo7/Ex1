@@ -196,22 +196,10 @@ public class WGraph_DS implements weighted_graph {
 
     @Override
     public boolean hasEdge(int node1, int node2) {
-        /*
-        The method checks if both of the edges exist in the graph,
-        then it checks if node1 is a neighbor of node2 and vice versa.
-         */
         boolean flag = false;
-        node_info a = getNode(node1);
-        node_info b = getNode(node2);
-        NodeData v1 = (NodeData) a;
-        NodeData v2 = (NodeData) b;
+        int edgeKey = getEdgeKey(node1, node2);
+        if(edgeKey >= 0) flag=true;
 
-        if (a == null || b == null) {
-            return false;
-        }
-        if (v1.hasNi(v2.getKey()) && v2.hasNi(v1.getKey())) {
-            flag = true;
-        }
         return flag;
     }
 
@@ -219,10 +207,9 @@ public class WGraph_DS implements weighted_graph {
     public double getEdge(int node1, int node2) {
         node_info n1 = getNode(node1);
         node_info n2 = getNode(node2);
-        NodeData v1 = (NodeData) n1;
         int edgeKey = getEdgeKey(node1, node2);
 
-        if (edgeKey >= 0) {
+        if (hasEdge(node1, node2)) {
             return edges.get(edgeKey);
         }
 
@@ -232,7 +219,7 @@ public class WGraph_DS implements weighted_graph {
     @Override
     public void addNode(int key) {
         if (!vertices.containsKey(key)) {
-            NodeData temp = new NodeData(key);
+            node_info temp = new NodeData(key);
             vertices.put(key, temp);
             mc++;
         }
@@ -349,9 +336,9 @@ public class WGraph_DS implements weighted_graph {
     }
 
     public static void main(String args[]) {
-        NodeData n0 = new NodeData(0);
-        NodeData n1 = new NodeData(1);
-        NodeData n2 = new NodeData(2);
+        node_info n0 = new NodeData(0);
+        node_info n1 = new NodeData(1);
+        node_info n2 = new NodeData(2);
         WGraph_DS g1 = new WGraph_DS();
         g1.addNode(0);
         g1.addNode(1);
