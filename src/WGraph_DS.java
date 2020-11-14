@@ -7,17 +7,17 @@ public class WGraph_DS implements weighted_graph {
     private int key; //id
     private double weight;
     private int mc; //Mode Count - for testing changes in the graph.
-    private int countEdges ; //The total number of edges in the graph,
+    private int countEdges; //The total number of edges in the graph,
     private HashMap<Integer, node_info> vertices;
     private HashMap<Integer, Double> edges = new HashMap<>();
 
     public WGraph_DS() {
         this.mc = 0;
-        this.countEdges  = 0;
+        this.countEdges = 0;
         this.vertices = new HashMap<Integer, node_info>();
     }
 
-    public static class NodeData implements node_info{
+    public static class NodeData implements node_info {
         /**
          * The NodeData class represents the set of operations applicable on a
          * node (vertex) in an (unidirectional) unweighted graph.
@@ -167,10 +167,23 @@ public class WGraph_DS implements weighted_graph {
         }
     }
 
-    private int generateEdgeKey(int node1, int node2){
+    private int generateEdgeKey(int node1, int node2) {
         String temp = String.valueOf(node1) + String.valueOf(node2);
         int edgeKey = Integer.parseInt(temp);
         return edgeKey;
+    }
+
+    private int getEdgeKey(int node1, int node2) {
+        int edgeKey;
+        edgeKey = generateEdgeKey(node1, node2);
+        if (edges.containsKey(edgeKey)) {
+            return edgeKey;
+        }
+        edgeKey = generateEdgeKey(node2, node1);
+        if (edges.containsKey(edgeKey)) {
+            return edgeKey;
+        }
+        return -1;
     }
 
     @Override
@@ -207,18 +220,10 @@ public class WGraph_DS implements weighted_graph {
         node_info n1 = getNode(node1);
         node_info n2 = getNode(node2);
         NodeData v1 = (NodeData) n1;
+        int edgeKey = getEdgeKey(node1, node2);
 
-        int edgeKey;
-
-        if(v1.hasNi(node2)){
-            edgeKey = generateEdgeKey(node1, node2);
-            if(edges.containsKey(edgeKey)){
-                return edges.get(edgeKey);
-            }
-            else {
-                edgeKey = generateEdgeKey(node2, node1);
-                return edges.get(edgeKey);
-            }
+        if (edgeKey >= 0) {
+            return edges.get(edgeKey);
         }
 
         return -1;
@@ -226,7 +231,7 @@ public class WGraph_DS implements weighted_graph {
 
     @Override
     public void addNode(int key) {
-        if(!vertices.containsKey(key)){
+        if (!vertices.containsKey(key)) {
             NodeData temp = new NodeData(key);
             vertices.put(key, temp);
             mc++;
@@ -243,21 +248,16 @@ public class WGraph_DS implements weighted_graph {
             int edgeKey;
             edgeKey = generateEdgeKey(node1, node2);
 
-            if(!hasEdge(node1, node2)) {
+            if (!hasEdge(node1, node2)) {
                 v1.addNi(v2);
                 v2.addNi(v1);
                 edges.put(edgeKey, w);
                 mc++;
                 countEdges += 1;
             }
-            else{
-                if(edges.containsKey(edgeKey)){
+            else {
+                    edgeKey = getEdgeKey(node1, node2);
                     edges.replace(edgeKey, w);
-                }
-                else{
-                    edgeKey = generateEdgeKey(node2, node1);
-                    edges.replace(edgeKey, w);
-                }
                 mc++;
             }
         }
@@ -294,21 +294,13 @@ public class WGraph_DS implements weighted_graph {
             Collection<node_info> getV = b.getNi();
             Iterator<node_info> v = getV.iterator();
             while (v.hasNext()) {
-                NodeData t = (NodeData)v.next();
+                NodeData t = (NodeData) v.next();
 //                removeEdge(key, t.getKey());
                 v.remove();
                 b.removeNode(t);
                 t.removeNode(b);
-                edgeKey = generateEdgeKey(b.getKey(), t.getKey());
-
-                if(edges.containsKey(edgeKey)){
-                    edges.remove(edgeKey);
-                }
-                else{
-                    edgeKey = generateEdgeKey(t.getKey(), b.getKey());
-                    edges.remove(edgeKey);
-                }
-
+                edgeKey = getEdgeKey(b.getKey(), t.getKey());
+                edges.remove(edgeKey);
                 countEdges--;
                 mc++;
             }
@@ -330,10 +322,9 @@ public class WGraph_DS implements weighted_graph {
             edgeKey = generateEdgeKey(node1, node2);
             v1.removeNode(v2);
             v2.removeNode(v1);
-            if(edges.containsKey(edgeKey)){
+            if (edges.containsKey(edgeKey)) {
                 edges.remove(edgeKey);
-            }
-            else{
+            } else {
                 edgeKey = generateEdgeKey(node2, node1);
                 edges.remove(edgeKey);
             }
@@ -357,7 +348,7 @@ public class WGraph_DS implements weighted_graph {
         return mc;
     }
 
-    public static void main(String args[]){
+    public static void main(String args[]) {
         NodeData n0 = new NodeData(0);
         NodeData n1 = new NodeData(1);
         NodeData n2 = new NodeData(2);
@@ -370,30 +361,30 @@ public class WGraph_DS implements weighted_graph {
         g1.connect(1, 2, 20);
 
 
-        System.out.println("E: "+ g1.getE());
-        System.out.println("n0: "+ g1.getNode(0));
-        System.out.println("n0: "+ n0.getKey());
-        System.out.println("n0 and n1 has edge: "+ g1.hasEdge(0, 1));
-        System.out.println("n1 and n0 has edge: "+ g1.hasEdge(1, 0));
-        System.out.println("n0 and n1 get edge(1): "+ g1.getEdge(0, 1));
+        System.out.println("E: " + g1.getE());
+        System.out.println("n0: " + g1.getNode(0));
+        System.out.println("n0: " + n0.getKey());
+        System.out.println("n0 and n1 has edge: " + g1.hasEdge(0, 1));
+        System.out.println("n1 and n0 has edge: " + g1.hasEdge(1, 0));
+        System.out.println("n0 and n1 get edge(1): " + g1.getEdge(0, 1));
         g1.connect(1, 0, 15.5);
-        System.out.println("n0 and n1 get edge(2): "+ g1.getEdge(0, 1));
+        System.out.println("n0 and n1 get edge(2): " + g1.getEdge(0, 1));
         g1.connect(2, 1, 20);
-        System.out.println("n1 and n2 get edge(3): "+ g1.getEdge(2, 1));
+        System.out.println("n1 and n2 get edge(3): " + g1.getEdge(2, 1));
         g1.connect(1, 2, 30);
-        System.out.println("n1 and n2 get edge(4): "+ g1.getEdge(1, 2));
-        System.out.println("n1 and n2 get edge(3): "+ g1.getEdge(2, 1));
-        System.out.println("n0 neighbors: "+ g1.getV(0));
+        System.out.println("n1 and n2 get edge(4): " + g1.getEdge(1, 2));
+        System.out.println("n1 and n2 get edge(3): " + g1.getEdge(2, 1));
+        System.out.println("n0 neighbors: " + g1.getV(0));
         g1.removeEdge(2, 1);
-        System.out.println("n1 and n2 get edge(4): "+ g1.getEdge(1, 2));
-        System.out.println("n1 and n2 get edge(3): "+ g1.getEdge(2, 1));
-        System.out.println("V: "+ g1.getV());
-        System.out.println("E: "+ g1.getE());
+        System.out.println("n1 and n2 get edge(4): " + g1.getEdge(1, 2));
+        System.out.println("n1 and n2 get edge(3): " + g1.getEdge(2, 1));
+        System.out.println("V: " + g1.getV());
+        System.out.println("E: " + g1.getE());
 //        g1.removeNode(0);
         g1.removeNode(1);
 //        g1.removeNode(2);
-        System.out.println("n1 and n0 has edge: "+ g1.hasEdge(1, 0));
-        System.out.println("V: "+ g1.getV());
-        System.out.println("E: "+ g1.getE());
+        System.out.println("n1 and n0 has edge: " + g1.hasEdge(1, 0));
+        System.out.println("V: " + g1.getV());
+        System.out.println("E: " + g1.getE());
     }
 }
