@@ -1,3 +1,4 @@
+import java.io.*;
 import java.util.*;
 
 public class WGraph_Algo implements weighted_graph_algorithms {
@@ -189,21 +190,27 @@ public class WGraph_Algo implements weighted_graph_algorithms {
         try {
             Integer.parseInt(str);
             return true;
-        } catch(NumberFormatException e){
+        } catch (NumberFormatException e) {
             return false;
         }
     }
 
     @Override
     public List<node_info> shortestPath(int src, int dest) {
-        node_info destination = g.getNode(dest);
         //Creates an ArrayList which is used to contain the path.
         List<node_info> path = new ArrayList<node_info>();
-        if(shortestPathDist(src, dest) > -1){
+
+        if (src == dest) {
+            path.add(g.getNode(src));
+            return path;
+        }
+
+        if (shortestPathDist(src, dest) > -1) {
+            node_info destination = g.getNode(dest);
             String str = destination.getInfo();
             String arr[] = str.split("-");
             for (String temp : arr) {
-                if(isNumeric(temp)) {
+                if (isNumeric(temp)) {
                     int key = Integer.valueOf(temp);
                     path.add(g.getNode(key));
                 }
@@ -216,15 +223,67 @@ public class WGraph_Algo implements weighted_graph_algorithms {
 
     @Override
     public boolean save(String file) {
-        return false;
+        boolean ans = false;
+        File f1 = new File(file);
+        try {
+            FileWriter writer = new FileWriter(f1);
+            Collection<node_info> getV = g.getV();
+            for (node_info temp : getV) {
+                writer.write(String.valueOf(temp));
+            }
+            writer.close();
+            ans = true;
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+//        try {
+//            ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream((file)));
+//            Collection<node_info> getV = g.getV();
+//            for (node_info temp : getV) {
+//                os.writeObject((temp));
+//            }
+//            os.close();
+//            ans = true;
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+        return ans;
     }
 
     @Override
     public boolean load(String file) {
-        return false;
+        boolean ans = false;
+        File f1 = new File(file);
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(f1));
+            while((file = br.readLine()) != null) {
+//                node_info node = (node_info) file;
+                System.out.println(file);
+            }
+            br.close();
+
+//            ObjectInputStream is = new ObjectInputStream(new FileInputStream(file));
+//            node_info node = (node_info) is.readObject();
+//            System.out.println("key: " + node.getTag() + " info: " + node.getInfo() + " tag: " + node.getTag());
+//            is.close();
+//            ans = true;
+
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        return ans;
     }
 
-    public static void main(String args[]) {
+        public static void main(String args[]) throws IOException {
         node_info n0 = new WGraph_DS.NodeData(0);
         node_info n1 = new WGraph_DS.NodeData(1);
         node_info n2 = new WGraph_DS.NodeData(2);
@@ -250,6 +309,7 @@ public class WGraph_Algo implements weighted_graph_algorithms {
         System.out.println(g3.isConnected());
         System.out.println(g2.shortestPathDist(0, 3));
         System.out.println(g2.shortestPath(0, 3));
-
+        g2.save("C:\\Users\\lioz7\\OneDrive\\Desktop\\FILE\\test.obg");
+        g2.load("C:\\Users\\lioz7\\OneDrive\\Desktop\\FILE\\test.obg");
     }
 }
