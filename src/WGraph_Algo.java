@@ -143,7 +143,7 @@ public class WGraph_Algo implements weighted_graph_algorithms {
                         double distance = current.getTag() + g.getEdge(current.getKey(), temp.getKey());
                         if (distance < temp.getTag()) {
                             temp.setTag(distance);
-                            temp.setInfo("" + current.getKey());
+                            temp.setInfo(current.getInfo() + "-" + current.getKey() + "-");
                             pq.add(temp);
                         }
                     }
@@ -185,8 +185,32 @@ public class WGraph_Algo implements weighted_graph_algorithms {
         return -1;
     }
 
+    private static boolean isNumeric(String str) {
+        try {
+            Integer.parseInt(str);
+            return true;
+        } catch(NumberFormatException e){
+            return false;
+        }
+    }
+
     @Override
     public List<node_info> shortestPath(int src, int dest) {
+        node_info destination = g.getNode(dest);
+        //Creates an ArrayList which is used to contain the path.
+        List<node_info> path = new ArrayList<node_info>();
+        if(shortestPathDist(src, dest) > -1){
+            String str = destination.getInfo();
+            String arr[] = str.split("-");
+            for (String temp : arr) {
+                if(isNumeric(temp)) {
+                    int key = Integer.valueOf(temp);
+                    path.add(g.getNode(key));
+                }
+            }
+            path.add(destination);
+            return path;
+        }
         return null;
     }
 
@@ -225,5 +249,7 @@ public class WGraph_Algo implements weighted_graph_algorithms {
         g3.init(g2.copy());
         System.out.println(g3.isConnected());
         System.out.println(g2.shortestPathDist(0, 3));
+        System.out.println(g2.shortestPath(0, 3));
+
     }
 }
