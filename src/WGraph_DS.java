@@ -8,13 +8,13 @@ public class WGraph_DS implements weighted_graph {
     private double weight;
     private int mc; //Mode Count - for testing changes in the graph.
     private int countEdges; //The total number of edges in the graph,
-    private HashMap<Integer, node_info> vertices;
+    private HashMap<Integer, NodeData> vertices;
     private HashMap<Integer, Double> edges = new HashMap<>();
 
     public WGraph_DS() {
         this.mc = 0;
         this.countEdges = 0;
-        this.vertices = new HashMap<Integer, node_info>();
+        this.vertices = new HashMap<Integer, NodeData>();
     }
 
     public static class NodeData implements node_info {
@@ -39,8 +39,9 @@ public class WGraph_DS implements weighted_graph {
         private HashMap<Integer, node_info> nei;
 
         public NodeData(int key) {
+            if(key<0) throw new RuntimeException("key must be a positive number!\nyou used: " + key);
             this.key = key;
-            this.tag = -1;
+            this.tag = Double.POSITIVE_INFINITY;
             this.info = null;
             this.nei = new HashMap<>();
         }
@@ -220,7 +221,7 @@ public class WGraph_DS implements weighted_graph {
     public void addNode(int key) {
         if (!vertices.containsKey(key)) {
             node_info temp = new NodeData(key);
-            vertices.put(key, temp);
+            vertices.put(key, (NodeData) temp);
             mc++;
         }
     }
@@ -228,16 +229,16 @@ public class WGraph_DS implements weighted_graph {
     @Override
     public void connect(int node1, int node2, double w) {
         if (node1 != node2) {
-            node_info a = getNode(node1);
-            node_info b = getNode(node2);
-            NodeData v1 = (NodeData) a;
-            NodeData v2 = (NodeData) b;
+            NodeData a = (NodeData) getNode(node1);
+            NodeData b = (NodeData) getNode(node2);
+//            NodeData v1 = (NodeData) a;
+//            NodeData v2 = (NodeData) b;
             int edgeKey;
             edgeKey = generateEdgeKey(node1, node2);
 
             if (!hasEdge(node1, node2)) {
-                v1.addNi(v2);
-                v2.addNi(v1);
+                a.addNi(b);
+                b.addNi(a);
                 edges.put(edgeKey, w);
                 mc++;
                 countEdges += 1;
@@ -252,7 +253,8 @@ public class WGraph_DS implements weighted_graph {
 
     @Override
     public Collection<node_info> getV() {
-        return vertices.values();
+//        return vertices.values();
+        return (Collection<node_info>) (Collection<? extends node_info>) vertices.values();
     }
 
     private Collection<Double> getE() {
@@ -261,8 +263,8 @@ public class WGraph_DS implements weighted_graph {
 
     @Override
     public Collection<node_info> getV(int node_id) {
-        node_info a = getNode(node_id);
-        NodeData v = (NodeData) a;
+        NodeData v = (NodeData) getNode(node_id);
+//        NodeData v = (NodeData) a;
         return v.getNi();
     }
 
@@ -275,8 +277,8 @@ public class WGraph_DS implements weighted_graph {
         else: the method will return null.
          */
         if ((getNode(key) != null) && (vertices.containsKey(key))) {
-            node_info a = getNode(key);
-            NodeData b = (NodeData) a;
+            NodeData b = (NodeData) getNode(key);
+//            NodeData b = (NodeData) a;
             int edgeKey;
             Collection<node_info> getV = b.getNi();
             Iterator<node_info> v = getV.iterator();
@@ -291,9 +293,9 @@ public class WGraph_DS implements weighted_graph {
                 countEdges--;
                 mc++;
             }
-            this.vertices.remove(key, a);
+            this.vertices.remove(key, b);
             mc++;
-            return a;
+            return b;
         }
         return null;
     }
@@ -301,10 +303,10 @@ public class WGraph_DS implements weighted_graph {
     @Override
     public void removeEdge(int node1, int node2) {
         if (((node1 != node2)) && (hasEdge(node1, node2))) {
-            node_info a = getNode(node1);
-            node_info b = getNode(node2);
-            NodeData v1 = (NodeData) a;
-            NodeData v2 = (NodeData) b;
+            NodeData v1 = (NodeData) getNode(node1);
+            NodeData v2 = (NodeData) getNode(node2);
+//            NodeData v1 = (NodeData) a;
+//            NodeData v2 = (NodeData) b;
             int edgeKey;
             edgeKey = generateEdgeKey(node1, node2);
             v1.removeNode(v2);
@@ -346,7 +348,6 @@ public class WGraph_DS implements weighted_graph {
         g1.connect(0, 1, 10);
         g1.connect(0, 2, 15);
         g1.connect(1, 2, 20);
-
 
         System.out.println("E: " + g1.getE());
         System.out.println("n0: " + g1.getNode(0));
