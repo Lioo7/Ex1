@@ -2,7 +2,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 
-public class WGraph_DS implements weighted_graph {
+public class WGraph_DS implements weighted_graph{
 
     private int key; //id
     private double weight;
@@ -168,8 +168,23 @@ public class WGraph_DS implements weighted_graph {
         }
     }
 
+    private int[] minMax(int node1, int node2){
+        int[] arr = new int[2]; //min:[0], max:[1]
+        if(node1 > node2){
+            arr[0] = node2;
+            arr[1] = node1;
+        }
+        else{
+            arr[0] = node1;
+            arr[1] = node2;
+        }
+        return arr;
+    }
+
     private int generateEdgeKey(int node1, int node2) {
-        String temp = String.valueOf(node1) + String.valueOf(node2);
+        int min = minMax(node1, node2)[0];
+        int max = minMax(node1, node2)[1];
+        String temp = String.valueOf(max) + String.valueOf(min);
         int edgeKey = Integer.parseInt(temp);
         return edgeKey;
     }
@@ -341,13 +356,23 @@ public class WGraph_DS implements weighted_graph {
         node_info n0 = new NodeData(0);
         node_info n1 = new NodeData(1);
         node_info n2 = new NodeData(2);
+        node_info n12 = new NodeData(12);
+        node_info n20 = new NodeData(20);
         WGraph_DS g1 = new WGraph_DS();
         g1.addNode(0);
         g1.addNode(1);
         g1.addNode(2);
+        g1.addNode(12);
+        g1.addNode(20);
         g1.connect(0, 1, 10);
-        g1.connect(0, 2, 15);
-        g1.connect(1, 2, 20);
+        g1.connect(0, 2, 20);
+        g1.connect(1, 2, 21);
+        g1.connect(12, 0, 120);
+        g1.connect(1,20, 201);
+        System.out.println("E: " + g1.getE());
+//        for(weighted_graph value: edges){
+//            System.out.println(value);
+//            }
 
         System.out.println("E: " + g1.getE());
         System.out.println("n0: " + g1.getNode(0));
