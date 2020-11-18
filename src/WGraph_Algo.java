@@ -1,7 +1,7 @@
 import java.io.*;
 import java.util.*;
 
-public class WGraph_Algo implements weighted_graph_algorithms {
+public class WGraph_Algo implements weighted_graph_algorithms, java.io.Serializable {
     private weighted_graph g;
     //Creates a HashSet which contains all the visited nodes.
     private HashSet<node_info> visited = new HashSet<>();
@@ -224,62 +224,38 @@ public class WGraph_Algo implements weighted_graph_algorithms {
     @Override
     public boolean save(String file) {
         boolean ans = false;
-        File f1 = new File(file);
         try {
-            FileWriter writer = new FileWriter(f1);
-            Collection<node_info> getV = g.getV();
-            for (node_info temp : getV) {
-                writer.write(String.valueOf(temp));
-            }
-            writer.close();
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+            objectOutputStream.writeObject(this.g);
+            fileOutputStream.close();
+            objectOutputStream.close();
             ans = true;
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
+        }
+         catch (IOException e) {
             e.printStackTrace();
         }
-
-//        try {
-//            ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream((file)));
-//            Collection<node_info> getV = g.getV();
-//            for (node_info temp : getV) {
-//                os.writeObject((temp));
-//            }
-//            os.close();
-//            ans = true;
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
         return ans;
     }
 
     @Override
     public boolean load(String file) {
-        boolean ans = false;
-        File f1 = new File(file);
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(f1));
-            while((file = br.readLine()) != null) {
-//                node_info node = (node_info) file;
-                System.out.println(file);
-            }
-            br.close();
-
-//            ObjectInputStream is = new ObjectInputStream(new FileInputStream(file));
-//            node_info node = (node_info) is.readObject();
-//            System.out.println("key: " + node.getTag() + " info: " + node.getInfo() + " tag: " + node.getTag());
-//            is.close();
-//            ans = true;
-
-        } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
+    boolean ans = false;
+    try{
+        FileInputStream fileInputStream = new FileInputStream(file);
+        ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+        weighted_graph loadGraph = (weighted_graph) objectInputStream;
+        fileInputStream.close();
+        objectInputStream.close();
+        ans = true;
+        this.g = loadGraph;
+    }
+    catch (FileNotFoundException e) {
+        e.printStackTrace();
+    }
+    catch (IOException e) {
+        e.printStackTrace();
+    }
         return ans;
     }
 
