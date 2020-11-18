@@ -227,14 +227,16 @@ public class WGraph_DS implements weighted_graph, Serializable {
 
     private Long getEdgeKey(int node1, int node2) {
         long edgeKey;
-        edgeKey = generateEdgeKey(node1, node2);
+        int min = minMax(node1, node2)[0];
+        int max = minMax(node1, node2)[1];
+        edgeKey = generateEdgeKey(max, min);
         if (edges.containsKey(edgeKey)) {
             return edgeKey;
         }
-        edgeKey = generateEdgeKey(node2, node1);
-        if (edges.containsKey(edgeKey)) {
-            return edgeKey;
-        }
+//        edgeKey = generateEdgeKey(node2, node1);
+//        if (edges.containsKey(edgeKey)) {
+//            return edgeKey;
+//        }
         return (long)-1;
     }
 
