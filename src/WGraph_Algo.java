@@ -1,7 +1,7 @@
 import java.io.*;
 import java.util.*;
 
-public class WGraph_Algo implements weighted_graph_algorithms, java.io.Serializable {
+public class WGraph_Algo implements weighted_graph_algorithms{
     private weighted_graph g;
     //Creates a HashSet which contains all the visited nodes.
     private HashSet<node_info> visited = new HashSet<>();
@@ -225,7 +225,8 @@ public class WGraph_Algo implements weighted_graph_algorithms, java.io.Serializa
     public boolean save(String file) {
         boolean ans = false;
         try {
-            FileOutputStream fileOutputStream = new FileOutputStream(file);
+            File f = new File(file);
+            FileOutputStream fileOutputStream = new FileOutputStream(f);
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
             objectOutputStream.writeObject(this.g);
             fileOutputStream.close();
@@ -244,16 +245,13 @@ public class WGraph_Algo implements weighted_graph_algorithms, java.io.Serializa
     try{
         FileInputStream fileInputStream = new FileInputStream(file);
         ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
-        weighted_graph loadGraph = (weighted_graph) objectInputStream;
+        weighted_graph loadGraph = (weighted_graph) objectInputStream.readObject();
+        this.g = loadGraph;
         fileInputStream.close();
         objectInputStream.close();
         ans = true;
-        this.g = loadGraph;
     }
-    catch (FileNotFoundException e) {
-        e.printStackTrace();
-    }
-    catch (IOException e) {
+    catch (ClassNotFoundException | IOException e) {
         e.printStackTrace();
     }
         return ans;
