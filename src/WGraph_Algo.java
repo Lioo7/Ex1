@@ -44,7 +44,7 @@ public class WGraph_Algo implements weighted_graph_algorithms{
         The method creates a new graph, then copies all the nodes of the original graph to the new graph.
         Then iterates on all the neighbors of each node and makes a new edge in the new graph.
          */
-        weighted_graph other = new WGraph_DS();
+        weighted_graph copy = new WGraph_DS();
         Collection<node_info> getV = g.getV();
 
         for (node_info original : getV) {
@@ -52,21 +52,21 @@ public class WGraph_Algo implements weighted_graph_algorithms{
             WGraph_DS.NodeData temp = new WGraph_DS.NodeData(key);
             temp.setInfo(original.getInfo());
             temp.setTag(original.getTag());
-            other.addNode(temp.getKey());
+            copy.addNode(temp.getKey());
         }
 
         Iterator<node_info> v = getV.iterator();
         while (v.hasNext()) {
             WGraph_DS.NodeData original = (WGraph_DS.NodeData) v.next();
-
-            for (node_info ni : original.getNi()) {
-                if (g.hasEdge(original.getKey(), ni.getKey())) {
-                    double wei = g.getEdge(original.getKey(), ni.getKey());
-                    other.connect(original.getKey(), ni.getKey(), wei);
+            for (node_info ni : g.getV(original.getKey())) {
+                if (g.hasEdge(original.getKey(), ni.getKey()) && !copy.hasEdge(original.getKey(), ni.getKey())) {
+                    double weight = g.getEdge(original.getKey(), ni.getKey());
+                    copy.connect(original.getKey(), ni.getKey(), weight);
+//                    System.out.println("Weight: " + weight);
                 }
             }
         }
-        return other;
+        return copy;
     }
 
     /**
@@ -100,7 +100,7 @@ public class WGraph_Algo implements weighted_graph_algorithms{
          */
         while (!queue.isEmpty()) {
             WGraph_DS.NodeData current = (WGraph_DS.NodeData) queue.poll();
-            for (node_info temp : current.getNi()) {
+            for (node_info temp : g.getV(current.getKey())) {
                 if (!visited.contains(temp)) {
                     queue.add(temp);
                     visited.add(temp);
@@ -139,7 +139,7 @@ public class WGraph_Algo implements weighted_graph_algorithms{
             WGraph_DS.NodeData current = (WGraph_DS.NodeData) pq.poll();
             if (!visited.contains(current)) {
                 visited.add(current);
-                for (node_info temp : current.getNi()) {
+                for (node_info temp : g.getV(current.getKey())) {
                     if (!visited.contains(temp)) {
                         double distance = current.getTag() + g.getEdge(current.getKey(), temp.getKey());
                         if (distance < temp.getTag()) {
@@ -276,11 +276,7 @@ public class WGraph_Algo implements weighted_graph_algorithms{
 
         weighted_graph_algorithms g2 = new WGraph_Algo();
         g2.init(g1);
-//        System.out.println(g2.isConnected());
-//        System.out.println(g2.shortestPathDist(0, 3));
-        weighted_graph_algorithms g3 = new WGraph_Algo();
-        g3.init(g2.copy());
-        System.out.println(g3.isConnected());
+        System.out.println(g2.isConnected());
         System.out.println(g2.shortestPathDist(0, 3));
         System.out.println(g2.shortestPath(0, 3));
         g2.save("C:\\Users\\lioz7\\OneDrive\\Desktop\\FILE\\test.obg");
