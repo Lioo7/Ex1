@@ -271,6 +271,7 @@ public class WGraph_DS implements weighted_graph, Serializable {
             ArrayList<node_info> neighborsArray = new ArrayList<node_info>();
             for (Integer key : edges.get(node_id).keySet()) {
                 node_info node = getNode(key);
+                System.out.println(node.getKey());
                 neighborsArray.add(node);
             }
             return neighborsArray;
@@ -289,15 +290,17 @@ public class WGraph_DS implements weighted_graph, Serializable {
         else: the method will return null.
          */
         if ((getNode(key) != null) && (vertices.containsKey(key))) {
-            Iterator<node_info> v = getV(key).iterator();
-            while (v.hasNext()) {
-                node_info t = v.next();
-                int min = minMax(t.getKey(), key)[0];
-                int max = minMax(t.getKey(), key)[1];;
-                if(hasEdge(min, max)){
-                    edges.get(min).remove(max);
-                    countEdges--;
-                    mc++;
+            if(edges.containsKey(key)){
+                Iterator<node_info> v = getV(key).iterator();
+                while (v.hasNext()) {
+                    node_info t = v.next();
+                    int min = minMax(t.getKey(), key)[0];
+                    int max = minMax(t.getKey(), key)[1];;
+                    if(hasEdge(min, max)){
+                        edges.get(min).remove(max);
+                        countEdges--;
+                        mc++;
+                    }
                 }
             }
             node_info removed = getNode(key);
