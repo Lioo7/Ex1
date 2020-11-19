@@ -7,7 +7,7 @@ public class WGraph_DS implements weighted_graph, Serializable {
     private int mc; //Mode Count - for testing changes in the graph.
     private int countEdges; //The total number of edges in the graph,
     private HashMap<Integer, node_info> vertices;
-    private HashMap<Integer, HashMap<Integer,Double>> edges;
+    private HashMap<Integer, HashMap<Integer, Double>> edges;
 
     public WGraph_DS() {
         this.mc = 0;
@@ -38,20 +38,11 @@ public class WGraph_DS implements weighted_graph, Serializable {
         private HashMap<Integer, node_info> nei;
 
         public NodeData(int key) {
-            if(key<0) throw new RuntimeException("key must be a positive number!\nyou used: " + key);
+            if (key < 0) throw new RuntimeException("key must be a positive number!\nyou used: " + key);
             this.key = key;
             this.tag = Double.POSITIVE_INFINITY;
             this.info = null;
             this.nei = new HashMap<>();
-        }
-
-        /**
-         * This (private) method returns the hash map.
-         *
-         * @return the hash map.
-         */
-        private HashMap<Integer, node_info> getMap() {
-            return this.nei;
         }
 
         /**
@@ -64,58 +55,6 @@ public class WGraph_DS implements weighted_graph, Serializable {
             return key;
         }
 
-        /**
-         * Key setter method, allows changing the remark (meta data) associated with this node.
-         *
-         * @param key the node id.
-         */
-        public void setKey(int key) {
-            this.key = key;
-        }
-
-        /**
-         * The method returns a collection with all the neighbor nodes of this node_data.
-         *
-         * @return the neighbors of this node.
-         */
-        public Collection<node_info> getNi() {
-            return this.nei.values();
-        }
-
-        /**
-         * The method checks if two nodes are adjacent.
-         *
-         * @param key the node id.
-         * @return true iff this<==>key are adjacent.
-         */
-        public boolean hasNi(int key) {
-            for (node_info ni : this.nei.values()) {
-                if (ni.getKey() == key) return true;
-            }
-            return false;
-        }
-
-        /**
-         * The method adds a node to be a new neighbor of this.
-         *
-         * @param t the node_data that will adds to this node_data.
-         */
-        public void addNi(node_info t) {
-            //Adds t to this nei
-            this.nei.put(t.getKey(), t);
-            NodeData temp = (NodeData) t;
-            //Adds this to temp(t) nei
-            temp.getMap().put(this.getKey(), this);
-        }
-
-        /**
-         * The method removes the node from this-collection.
-         *
-         * @param node the node the will be deleted.
-         */
-        public void removeNode(node_info node) {
-            this.nei.remove(node.getKey(), node);
-        }
 
         /**
          * info getter method.
@@ -183,19 +122,6 @@ public class WGraph_DS implements weighted_graph, Serializable {
 //        }
     }
 
-    private int[] minMax(int node1, int node2){
-        int[] arr = new int[2]; //min:[0], max:[1]
-        if(node1 > node2){
-            arr[0] = node2;
-            arr[1] = node1;
-        }
-        else{
-            arr[0] = node1;
-            arr[1] = node2;
-        }
-        return arr;
-    }
-
     @Override
     public node_info getNode(int key) {
         if (!vertices.containsKey(key)) {
@@ -207,10 +133,16 @@ public class WGraph_DS implements weighted_graph, Serializable {
     @Override
     public boolean hasEdge(int node1, int node2) {
         boolean flag = false;
-        int min = minMax(node1, node2)[0];
-        int max = minMax(node1, node2)[1];
-        if(edges.containsKey(min) && edges.get(min).containsKey(max)){
-            flag=true;
+        if (edges.get(node1) != null) {
+            if (edges.get(node1).containsKey(node2)) {
+                flag = true;
+            }
+        }
+
+        if (edges.get(node2) != null) {
+            if (edges.get(node2).containsKey(node1)) {
+                flag = true;
+            }
         }
 
         return flag;
@@ -218,12 +150,9 @@ public class WGraph_DS implements weighted_graph, Serializable {
 
     @Override
     public double getEdge(int node1, int node2) {
-        int min = minMax(node1, node2)[0];
-        int max = minMax(node1, node2)[1];
-        if(hasEdge(min, max)){
-            return edges.get(min).get(max);
-        }
-        else{
+        if (hasEdge(node1, node2)) {
+            return edges.get(node1).get(node2);
+        } else {
             return -1;
         }
     }
@@ -239,21 +168,69 @@ public class WGraph_DS implements weighted_graph, Serializable {
 
     @Override
     public void connect(int node1, int node2, double w) {
+//        System.out.println("node1: " + node1 + " node2: " + node2);
         if (node1 != node2) {
-            int min = minMax(node1, node2)[0];
-            int max = minMax(node1, node2)[1];
-            if (!hasEdge(min, max)) {
-                HashMap<Integer, Double> temp = new HashMap<>();
-                temp.put(max, w);
-                edges.put(min, temp);
-                mc++;
-                countEdges++;
+            if (!hasEdge(node1, node2)) {
+                if (edges.get(node1)==null && edges.get(node2)==null) {
+                    HashMap<Integer, Double> value1 = new HashMap<>();
+                    value1.put(node2, w);
+                    edges.put(node1, value1);
+
+                    HashMap<Integer, Double> value2 = new HashMap<>();
+                    value2.put(node1, w);
+                    edges.put(node2, value2);
+
+//                    System.out.println(hasEdge(node1, node2));
+//                    System.out.println(hasEdge(node2, node1));
+
+                    mc++;
+                    countEdges++;
+                }
+
+                else if(edges.get(node1)==null && edges.get(node2)!=null) {
+                    HashMap<Integer, Double> value1 = new HashMap<>();
+                    value1.put(node2, w);
+                    edges.put(node1, value1);
+
+                    edges.get(node2).put(node1, w);
+
+                    mc++;
+                    countEdges++;
+                }
+
+                else if(edges.get(node1)!=null && edges.get(node2)==null) {
+                    edges.get(node1).put(node2, w);
+
+                    HashMap<Integer, Double> value2 = new HashMap<>();
+                    value2.put(node1, w);
+                    edges.put(node2, value2);
+
+                    mc++;
+                    countEdges++;
+                }
+
+                else if (edges.get(node1)!=null && edges.get(node2)!=null) {
+                    edges.get(node1).put(node2, w);
+
+                    HashMap<Integer, Double> value2 = new HashMap<>();
+                    value2.put(node1, w);
+                    edges.put(node2, value2);
+
+                    mc++;
+                    countEdges++;
+                }
             }
             else {
-                if(edges.get(min).get(max) != w){
-                    HashMap<Integer, Double> temp = new HashMap<>();
-                    temp.put(max, w);
-                    edges.replace(min,temp);
+//                System.out.println("w: " + (edges.get(node1).get(node2)));
+                if (edges.containsKey(node1) && edges.get(node1).containsKey(node2) && edges.get(node1).get(node2) != w) {
+                    HashMap<Integer, Double> value1 = edges.get(node1);
+                    value1.put(node2, w);
+                    edges.replace(node1, value1);
+
+                    HashMap<Integer, Double> value2 = edges.get(node2);
+                    value2.put(node1, w);
+                    edges.replace(node2, value2);
+
                     mc++;
                 }
             }
@@ -267,18 +244,13 @@ public class WGraph_DS implements weighted_graph, Serializable {
 
     @Override
     public Collection<node_info> getV(int node_id) {
-        if(vertices.containsKey(node_id)){
-            ArrayList<node_info> neighborsArray = new ArrayList<node_info>();
+        ArrayList<node_info> neighborsArray = new ArrayList<node_info>();
+        if (edges.containsKey(node_id)) {
             for (Integer key : edges.get(node_id).keySet()) {
-                node_info node = getNode(key);
-                System.out.println(node.getKey());
-                neighborsArray.add(node);
+                neighborsArray.add(getNode(key));
             }
-            return neighborsArray;
         }
-        else{
-            return null;
-        }
+        return neighborsArray;
     }
 
     @Override
@@ -290,16 +262,12 @@ public class WGraph_DS implements weighted_graph, Serializable {
         else: the method will return null.
          */
         if ((getNode(key) != null) && (vertices.containsKey(key))) {
-            if(edges.containsKey(key)){
+            if (edges.containsKey(key)) {
                 Iterator<node_info> v = getV(key).iterator();
                 while (v.hasNext()) {
                     node_info t = v.next();
-                    int min = minMax(t.getKey(), key)[0];
-                    int max = minMax(t.getKey(), key)[1];;
-                    if(hasEdge(min, max)){
-                        edges.get(min).remove(max);
-                        countEdges--;
-                        mc++;
+                    if (hasEdge(t.getKey(), key)) {
+                        removeEdge(t.getKey(), key);
                     }
                 }
             }
@@ -314,10 +282,9 @@ public class WGraph_DS implements weighted_graph, Serializable {
     @Override
     public void removeEdge(int node1, int node2) {
         if (((node1 != node2)) && (hasEdge(node1, node2))) {
-            int min = minMax(node1, node2)[0];
-            int max = minMax(node1, node2)[1];
-            edges.get(min).remove(max);
-            countEdges -= 1;
+            edges.get(node1).remove(node2);
+            edges.get(node2).remove(node1);
+            countEdges--;
             mc++;
         }
     }
@@ -337,6 +304,7 @@ public class WGraph_DS implements weighted_graph, Serializable {
         return mc;
     }
 
+
     public static void main(String args[]) {
         node_info n0 = new NodeData(0);
         node_info n1 = new NodeData(1);
@@ -345,15 +313,17 @@ public class WGraph_DS implements weighted_graph, Serializable {
         node_info n20 = new NodeData(20);
         WGraph_DS g1 = new WGraph_DS();
         g1.addNode(0);
+        System.out.println("V0: " + g1.getV(0));
         g1.addNode(1);
         g1.addNode(2);
         g1.addNode(12);
         g1.addNode(20);
         g1.connect(0, 1, 10);
+        g1.connect(0, 1, 10.1);
         g1.connect(0, 2, 20);
         g1.connect(1, 2, 21);
         g1.connect(12, 0, 120);
-        g1.connect(1,20, 201);
+        g1.connect(1, 20, 201);
 
         System.out.println("n0: " + g1.getNode(0));
         System.out.println("n0: " + n0.getKey());
