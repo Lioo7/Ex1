@@ -126,7 +126,8 @@ public class WGraph_Algo implements weighted_graph_algorithms{
         /*
         Creates a queue which will contain the nodes that need to traverse (by their order).
          */
-        PriorityQueue<node_info> pq = new PriorityQueue<node_info>(3, comparator);
+        int initialCapacity = g.nodeSize();
+        PriorityQueue<node_info> pq = new PriorityQueue<node_info>(initialCapacity, comparator);
         pq.add(source);
 
         /*
