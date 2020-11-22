@@ -41,7 +41,8 @@ The reason behind it is the efficient complexity of this data structure, which a
         System.out.println(ga.shortestPathDist(0, 3));
         System.out.println(ga.shortestPath(0, 3));
         
-### illustration: ![alt text](https://i.ibb.co/wynXzwk/1.png)
+### illustration: 
+![alt text](https://i.ibb.co/wynXzwk/1.png)
 
         
 ### output:
@@ -72,7 +73,8 @@ The reason behind it is the efficient complexity of this data structure, which a
 
         g1.removeEdge(0, 1);
         
-### illustration: ![alt text](https://i.ibb.co/9wds5yp/2.png)
+### illustration:
+![alt text](https://i.ibb.co/9wds5yp/2.png)
                 
 
 ### output:
