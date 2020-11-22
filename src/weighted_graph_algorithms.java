@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.List;
 /**
  * This interface represents an Undirected (positive) Weighted Graph Theory algorithms including:
@@ -60,7 +61,7 @@ public interface weighted_graph_algorithms {
      * @param file - the file name (may include a relative path).
      * @return true - iff the file was successfully saved
      */
-    public boolean save(String file);
+    public boolean save(String file) throws IOException;
 
     /**
      * This method load a graph to this graph algorithm.
