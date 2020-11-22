@@ -16,10 +16,10 @@ Particularly these methods:
 The main data structures in the program are HashMap, all the nodes (vertices) store in a HashMap and all the edges also store in a HashMap which contains another inner HashMap inside, which contains the neighbors of each node (vertex) in the graph.
 The reason behind it is the efficient complexity of this data structure, which allows accessing, inserting, and to delete from the hash table with great complexity of O(1) on average.
 
-Examples: 
+## Examples: 
 
-1.
-input:
+### 1.
+### input:
 
         WGraph_DS g1 = new WGraph_DS();
         weighted_graph_algorithms ga = new WGraph_Algo();
@@ -41,20 +41,18 @@ input:
         System.out.println(ga.shortestPathDist(0, 3));
         System.out.println(ga.shortestPath(0, 3));
         
-illustration:
-               
-        ![alt text](https://i.ibb.co/wynXzwk/1.png)
+### illustration: ![alt text](https://i.ibb.co/wynXzwk/1.png)
 
         
-output:
+### output:
 
        true
        9.4
        [{key=0}, {key=1}, {key=4}, {key=3}]
        
 
-2.
-input:
+### 2.
+### input:
 
         WGraph_DS g1 = new WGraph_DS();
         weighted_graph_algorithms ga = new WGraph_Algo();
@@ -74,12 +72,10 @@ input:
 
         g1.removeEdge(0, 1);
         
-illustration:
-
-                ![alt text](https://i.ibb.co/9wds5yp/2.png)
+### illustration: ![alt text](https://i.ibb.co/9wds5yp/2.png)
                 
 
-output:
+### output:
 
        false
        -1.0
