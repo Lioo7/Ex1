@@ -146,7 +146,7 @@ public class WGraph_DS implements weighted_graph, Serializable {
 
     @Override
     public void connect(int node1, int node2, double w) {
-        if (node1!=node2 && w>=0) {
+        if (node1!=node2 && w>=0 && vertices.containsKey(node1) && vertices.containsKey(node2)) {
                 if (!hasEdge(node1, node2)) {
                     edges.get(node1).put(node2, w);
                     edges.get(node2).put(node1, w);
