@@ -1,6 +1,6 @@
-# ex1
+# Ex1
 
-This project was made during my OOP course at Ariel University in the Department of Computer Science, 2020.
+## This project was made during my OOP course at Ariel University in the Department of Computer Science, 2020.
 
 Project site: https://github.com/Lioo7/Ex0.git
 
@@ -41,11 +41,17 @@ input:
         System.out.println(ga.shortestPathDist(0, 3));
         System.out.println(ga.shortestPath(0, 3));
         
+illustration:
+               
+        ![alt text](https://i.ibb.co/wynXzwk/1.png)
+
+        
 output:
 
        true
        9.4
        [{key=0}, {key=1}, {key=4}, {key=3}]
+       
 
 2.
 input:
@@ -68,6 +74,11 @@ input:
 
         g1.removeEdge(0, 1);
         
+illustration:
+
+                ![alt text](https://i.ibb.co/9wds5yp/2.png)
+                
+
 output:
 
        false
