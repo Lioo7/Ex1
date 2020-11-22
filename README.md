@@ -18,10 +18,11 @@ The reason behind it is the efficient complexity of this data structure, which a
 Examples: 
 1.
 input:
+
         WGraph_DS g1 = new WGraph_DS();
         weighted_graph_algorithms ga = new WGraph_Algo();
         ga.init(g1);
-
+        
         g1.addNode(0);
         g1.addNode(1);
         g1.addNode(2);
@@ -45,6 +46,7 @@ output:
 
 2.
 input:
+
         WGraph_DS g1 = new WGraph_DS();
         weighted_graph_algorithms ga = new WGraph_Algo();
         ga.init(g1);
