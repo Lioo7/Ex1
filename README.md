@@ -1,6 +1,7 @@
 # ex1
 
 This project was made during my OOP course at Ariel University in the Department of Computer Science, 2020.
+
 Project site: https://github.com/Lioo7/Ex0.git
 
 The assignment is about modeling data structure and algorithms in a (unidirectional) weighted graph.
@@ -40,6 +41,7 @@ input:
         System.out.println(ga.shortestPath(0, 3));
         
 output:
+
        true
        9.4
        [{key=0}, {key=1}, {key=4}, {key=3}]
@@ -66,6 +68,7 @@ input:
         g1.removeEdge(0, 1);
         
 output:
+
        false
        -1.0
        null
