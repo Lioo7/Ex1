@@ -2,7 +2,7 @@ import java.io.Serializable;
 import java.util.*;
 
 /**
- * The WGraph_DS class represents an unidirectional weighted graph.
+ * The WGraph_DS class represents a unidirectional weighted graph.
  * Using a HashMap to store all the vertices in the graph.
  * and another HashMap inside another HashMap to store all the edges in the graph.
  *
@@ -26,6 +26,7 @@ public class WGraph_DS implements weighted_graph, Serializable {
         this.edges = new HashMap<Integer, HashMap<Integer, Double>>();
     }
 
+    // A subclass which implements node_info
     public static class NodeData implements node_info, Serializable {
         /**
          * The NodeData class represents the set of operations applicable on a
@@ -34,7 +35,7 @@ public class WGraph_DS implements weighted_graph, Serializable {
          * Each vertex contains three variables:
          * - A key of type int which represents the exclusive key of the vertex.
          * - An info of type String which represents the parent of the vertex, initializes as null by default.
-         * - A tag of type int which represents the distance of the vertex form his source, initializes as infinity.
+         * - A tag of type int which represents the distance of the vertex from his source, initializes as infinity.
          *
          * @author Lioz Akirav.
          * @version 1.0, 22 Nov 2020.
@@ -77,7 +78,7 @@ public class WGraph_DS implements weighted_graph, Serializable {
         }
 
         /**
-         * info setter method, allows changing the remark (meta data) associated with this node.
+         * info setter method allows changing the remark (metadata) associated with this node.
          *
          * @param s the node info (parent).
          */
@@ -97,7 +98,7 @@ public class WGraph_DS implements weighted_graph, Serializable {
         }
 
         /**
-         * tag setter method, allows changing the remark (meta data) associated with this node.
+         * tag setter method allows changing the remark (metadata) associated with this node.
          *
          * @param t - the node tag (distance).
          */
@@ -150,7 +151,7 @@ public class WGraph_DS implements weighted_graph, Serializable {
     }
 
     /**
-     * The method returns the weight of the edge if it exist.
+     * The method returns the weight of the edge if it exists.
      * Complexity: O(1) - HashMap access complexity.
      *
      * @param node1 the key(id) of the first node.
@@ -167,7 +168,7 @@ public class WGraph_DS implements weighted_graph, Serializable {
     }
 
     /**
-     * The method add a new node to the graph with the given node_data.
+     * The method adds a new node to the graph with the given node_data.
      * Complexity: O(1) - hash map add complexity.
      *
      * @param key the key of the node
@@ -229,7 +230,7 @@ public class WGraph_DS implements weighted_graph, Serializable {
 
     /**
      * The method returns a collection containing all the nodes connected to node_id.
-     * Complexity: O(k) -
+     * Complexity: O(k) - hash map access complexity is O(1) *  k which represents the degree of node_id.
      *
      * @param node_id the key(id) of the node.
      * @return Collection<node_data>.
@@ -252,7 +253,7 @@ public class WGraph_DS implements weighted_graph, Serializable {
 
     /**
      * The method deletes the node (with the given ID) from the graph -
-     * and removes all edges which starts or ends at this node.
+     * and removes all edges which start or end at this node.
      * Complexity: O(n) - HashMap access complexity is O(1) * n nodes.
      *
      * @param key the key(id) of the node.
