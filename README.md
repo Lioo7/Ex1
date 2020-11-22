@@ -5,8 +5,8 @@
 ### Project site: https://github.com/Lioo7/Ex0.git
 
 
-The assignment is about modeling data structure and algorithms in a (unidirectional) weighted graph.
-Particularly these methods:
+### The assignment is about modeling data structure and algorithms in a (unidirectional) weighted graph.
+#### Particularly these methods:
 * copy - This computes a deep copy of this graph.
 * isConnected - This checks if the graph is connected or not.
 * shortestPathDist - This returns the shortest distance between two given nodes.
@@ -74,6 +74,10 @@ The reason behind it is the efficient complexity of this data structure, which a
         g1.connect(4, 3, 1);
 
         g1.removeEdge(0, 1);
+        
+        System.out.println(ga.isConnected());
+        System.out.println(ga.shortestPathDist(0, 3));
+        System.out.println(ga.shortestPath(0, 3));
         
 ### illustration:
 ![alt text](https://i.ibb.co/9wds5yp/2.png)
