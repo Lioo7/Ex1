@@ -2,7 +2,7 @@
 
 ## This project was made during my OOP course at Ariel University in the Department of Computer Science, 2020.
 
-Project site: https://github.com/Lioo7/Ex0.git
+### Project site: https://github.com/Lioo7/Ex0.git
 
 The assignment is about modeling data structure and algorithms in a (unidirectional) weighted graph.
 Particularly these methods:
