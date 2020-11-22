@@ -353,48 +353,4 @@ public class WGraph_DS implements weighted_graph, Serializable {
         }
         return false;
     }
-
-    public static void main(String args[]) {
-        node_info n0 = new NodeData(0);
-        node_info n1 = new NodeData(1);
-        node_info n2 = new NodeData(2);
-        node_info n12 = new NodeData(12);
-        node_info n20 = new NodeData(20);
-        WGraph_DS g1 = new WGraph_DS();
-        g1.addNode(0);
-        System.out.println("V0: " + g1.getV(0));
-        g1.addNode(1);
-        g1.addNode(2);
-        g1.addNode(12);
-        g1.addNode(20);
-        g1.connect(0, 1, 10);
-        g1.connect(0, 1, 10.1);
-        g1.connect(0, 2, 20);
-        g1.connect(1, 2, 21);
-        g1.connect(12, 0, 120);
-        g1.connect(1, 20, 201);
-
-        System.out.println("n0: " + g1.getNode(0));
-        System.out.println("n0: " + n0.getKey());
-        System.out.println("n0 and n1 has edge: " + g1.hasEdge(0, 1));
-        System.out.println("n1 and n0 has edge: " + g1.hasEdge(1, 0));
-        System.out.println("n0 and n1 get edge(1): " + g1.getEdge(0, 1));
-        g1.connect(1, 0, 15.5);
-        System.out.println("n0 and n1 get edge(2): " + g1.getEdge(0, 1));
-        g1.connect(2, 1, 20);
-        System.out.println("n1 and n2 get edge(3): " + g1.getEdge(2, 1));
-        g1.connect(1, 2, 30);
-        System.out.println("n1 and n2 get edge(4): " + g1.getEdge(1, 2));
-        System.out.println("n1 and n2 get edge(3): " + g1.getEdge(2, 1));
-        System.out.println("n0 neighbors: " + g1.getV(0));
-        g1.removeEdge(2, 1);
-        System.out.println("n1 and n2 get edge(4): " + g1.getEdge(1, 2));
-        System.out.println("n1 and n2 get edge(3): " + g1.getEdge(2, 1));
-        System.out.println("V: " + g1.getV());
-//        g1.removeNode(0);
-        g1.removeNode(1);
-//        g1.removeNode(2);
-        System.out.println("n1 and n0 has edge: " + g1.hasEdge(1, 0));
-        System.out.println("V: " + g1.getV());
-    }
 }
