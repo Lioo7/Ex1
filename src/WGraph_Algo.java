@@ -340,30 +340,4 @@ public class WGraph_Algo implements weighted_graph_algorithms {
             return (int) (n1.getTag() - n2.getTag());
         }
     };
-
-    public static void main(String args[]) throws IOException {
-        node_info n0 = new WGraph_DS.NodeData(0);
-        node_info n1 = new WGraph_DS.NodeData(1);
-        node_info n2 = new WGraph_DS.NodeData(2);
-        WGraph_DS g1 = new WGraph_DS();
-        g1.addNode(0);
-        g1.addNode(1);
-        g1.addNode(2);
-        g1.addNode(3);
-        g1.addNode(4);
-
-        g1.connect(0, 1, 2);
-        g1.connect(1, 2, 6.2);
-        g1.connect(1, 4, 6.4);
-        g1.connect(2, 3, 2);
-        g1.connect(4, 3, 1);
-
-        weighted_graph_algorithms g2 = new WGraph_Algo();
-        g2.init(g1);
-        System.out.println(g2.isConnected());
-        System.out.println(g2.shortestPathDist(0, 3));
-        System.out.println(g2.shortestPath(0, 3));
-        g2.save("C:\\Users\\lioz7\\OneDrive\\Desktop\\FILE\\test.obg");
-        g2.load("C:\\Users\\lioz7\\OneDrive\\Desktop\\FILE\\test.obg");
-    }
 }
