@@ -16,7 +16,7 @@ public class WGraph_DS implements weighted_graph, Serializable {
         this.edges = new HashMap<Integer, HashMap<Integer, Double>>();
     }
 
-    public static class NodeData implements node_info, Serializable {
+            public static class NodeData implements node_info, Serializable {
         /**
          * The NodeData class represents the set of operations applicable on a
          * node (vertex) in an (unidirectional) unweighted graph.
@@ -104,22 +104,6 @@ public class WGraph_DS implements weighted_graph, Serializable {
         public String toString() {
             return "{" + "key=" + key + '}';
         }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            NodeData nodeData = (NodeData) o;
-            return key == nodeData.key &&
-                    Double.compare(nodeData.tag, tag) == 0 &&
-                    Objects.equals(info, nodeData.info);
-//                    && Objects.equals(nei, nodeData.nei);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(key, info, tag, nei);
-        }
     }
 
     @Override
@@ -155,43 +139,24 @@ public class WGraph_DS implements weighted_graph, Serializable {
         if (!vertices.containsKey(key)) {
             node_info temp = new NodeData(key);
             vertices.put(key, temp);
+            edges.put(key, new HashMap<Integer, Double>());
             mc++;
         }
     }
 
     @Override
     public void connect(int node1, int node2, double w) {
-        if (node1!=node2 && vertices.containsKey(node1) && vertices.containsKey(node2)) {
+        if (node1!=node2 && w>=0) {
                 if (!hasEdge(node1, node2)) {
-                    if(edges.containsKey(node1)){
-                        edges.get(node1).put(node2, w);
-                    }
-                    else{
-                        HashMap<Integer, Double> innerMapNode2 = new HashMap<Integer, Double>();
-                        innerMapNode2.put(node2, w);
-                        edges.put(node1, innerMapNode2);
-                    }
-
-                    if(edges.containsKey(node2)){
-                        edges.get(node2).put(node1, w);
-                    }
-                    else{
-                        HashMap<Integer, Double> innerMapNode1 = new HashMap<Integer, Double>();
-                        innerMapNode1.put(node1, w);
-                        edges.put(node2, innerMapNode1);
-                    }
+                    edges.get(node1).put(node2, w);
+                    edges.get(node2).put(node1, w);
 
                     mc++;
                     countEdges++;
                 }
                 else if (edges.get(node1).get(node2) != w) {
-                    HashMap<Integer, Double> value1 = edges.get(node1);
-                    value1.put(node2, w);
-                    edges.replace(node1, value1);
-
-                    HashMap<Integer, Double> value2 = edges.get(node2);
-                    value2.put(node1, w);
-                    edges.replace(node2, value2);
+                    edges.get(node1).replace(node2, w);
+                    edges.get(node2).replace(node1, w);
 
                     mc++;
                 }
@@ -266,6 +231,17 @@ public class WGraph_DS implements weighted_graph, Serializable {
         return mc;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        WGraph_DS copy = (WGraph_DS) obj;
+
+        if(this.nodeSize() == copy.nodeSize() && this.edgeSize() == copy.edgeSize()){
+            return true;
+        }
+        return false;
+        }
 
     public static void main(String args[]) {
         node_info n0 = new NodeData(0);
