@@ -17,6 +17,7 @@ The main data structures in the program are HashMap, all the nodes (vertices) st
 The reason behind it is the efficient complexity of this data structure, which allows accessing, inserting, and to delete from the hash table with great complexity of O(1) on average.
 
 Examples: 
+
 1.
 input:
 
